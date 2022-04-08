@@ -1,9 +1,28 @@
 import * as React from 'react';
-
+import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache,} from '@apollo/client';
 import Box from '@mui/material/Box';
+import { onError } from '@apollo/client/link/error';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Typography from '../components/Typography';
+
+const errorLink = onError(({ graphqlErrors, networkError }) => {
+  if (graphqlErrors) {
+    graphqlErrors.map(({message, location, path}) => {
+      alert(`GraphQl has an error: ${message}`);
+    });
+  }
+}); 
+
+const link = from([
+  errorLink,
+  new HttpLink({uri:'https://api.opensea.io/api/v1/collections?offset=0&limit=100'})
+]);
+
+const client = new ApolloClient({
+  link: link,
+  cache: new InMemoryCache(),
+});
 
 const item = {
   display: 'flex',
@@ -14,6 +33,7 @@ const item = {
 
 function ProductValues() {
   return (
+    <ApolloProvider>
     <Box
       component="section"
       sx={{ display: 'flex', overflow: 'hidden', bgcolor: 'secondary.light' }}
@@ -88,6 +108,7 @@ function ProductValues() {
         </Grid>
       </Container>
     </Box>
+    </ApolloProvider>
   );
 }
 
