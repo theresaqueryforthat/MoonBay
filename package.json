@@ -1,7 +1,7 @@
 {
   "name": "moonbay",
   "version": "1.0.0",
-  "description": "",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js --ignore client",
@@ -14,5 +14,18 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theresaqueryforthat/MoonBay.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/theresaqueryforthat/MoonBay/issues"
+  },
+  "homepage": "https://github.com/theresaqueryforthat/MoonBay#readme",
+  "dependencies": {
+    "apollo-server-express": "^3.6.7",
+    "express": "^4.17.3"
   }
 }
