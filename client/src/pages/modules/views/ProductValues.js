@@ -41,7 +41,7 @@ function ProductValues() {
       <Container sx={{ mt: 15, mb: 30, display: 'flex', position: 'relative' }}>
         <Box
           component="img"
-          src="/static/themes/onepirate/productCurvyLines.png"
+          src="/static/productCurvyLines.png"
           alt="curvy lines"
           sx={{ pointerEvents: 'none', position: 'absolute', top: -180 }}
         />
@@ -50,20 +50,20 @@ function ProductValues() {
             <Box sx={item}>
               <Box
                 component="img"
-                src="/static/themes/onepirate/productValues1.svg"
+                src="/static/productValues1.svg"
                 alt="suitcase"
                 sx={{ height: 55 }}
               />
               <Typography variant="h6" sx={{ my: 5 }}>
-                The best luxury hotels
+                Browse, Buy, Relax
               </Typography>
               <Typography variant="h5">
                 {
-                  'From the latest trendy boutique hotel to the iconic palace with XXL pool'
+                  'MoonBay is your go to site for finding the top NFT collections'
                 }
 
                 {
-                  ', go for a mini-vacation just a few subway stops away from your home.'
+                  ', browse with ease.'
                 }
               </Typography>
             </Box>
@@ -72,19 +72,19 @@ function ProductValues() {
             <Box sx={item}>
               <Box
                 component="img"
-                src="/static/themes/onepirate/productValues2.svg"
+                src="/static/productValues2.svg"
                 alt="graph"
                 sx={{ height: 55 }}
               />
               <Typography variant="h6" sx={{ my: 5 }}>
-                New experiences
+                Take Harbor
               </Typography>
               <Typography variant="h5">
                 {
-                  'Privatize a pool, take a Japanese bath or wake up in 900m2 of garden… '
+                  'Like your favorite NFTs in an instant,'
                 }
 
-                {'your Sundays will not be alike.'}
+                {' and show off your favorites.'}
               </Typography>
             </Box>
           </Grid>
@@ -92,12 +92,12 @@ function ProductValues() {
             <Box sx={item}>
               <Box
                 component="img"
-                src="/static/themes/onepirate/productValues3.svg"
+                src="/static/productValues3.svg"
                 alt="clock"
                 sx={{ height: 55 }}
               />
               <Typography variant="h6" sx={{ my: 5 }}>
-                Exclusive rates
+                Free To Use
               </Typography>
               <Typography variant="h5">
                 {'By registering, you will access specially negotiated rates '}
