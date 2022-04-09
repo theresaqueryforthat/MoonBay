@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import withRoot from './modules/withRoot';
+import AppFooter from './modules/views/AppFooter';
 
 function Copyright() {
   return (
@@ -53,7 +54,7 @@ function Explore() {
               Explore Collections
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Check out the lastest and greatest smoking monkeys in your area!
+              View what's hot and decide what collection fits your taste
             </Typography>
             <Stack
               sx={{ pt: 4 }}
@@ -98,22 +99,8 @@ function Explore() {
           </Grid>
         </Container>
       </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
+      <AppFooter />
+      <Copyright />
     </React.Fragment>
   );
 }
