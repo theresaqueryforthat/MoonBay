@@ -13,16 +13,17 @@ const typeDefs = gql`
     _id: ID!
     name: String!
     permalink: String!
-    image_link: String!
+    image_url: String!
   }
 
   type Query {
-    me: User
+    user: User
     assets: [Asset]!
   }
 
   type Mutation {
     login(email: String): User
+    createAssets: [Asset]!
   }
 `;
 
