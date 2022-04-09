@@ -13,7 +13,7 @@ const typeDefs = gql`
     _id: ID!
     name: String!
     permalink: String!
-    image_link: String!
+    image_url: String!
   }
 
   type Query {
