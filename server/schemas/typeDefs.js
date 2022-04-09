@@ -17,12 +17,13 @@ const typeDefs = gql`
   }
 
   type Query {
-    me: User
+    user: User
     assets: [Asset]!
   }
 
   type Mutation {
     login(email: String): User
+    createAssets: [Asset]!
   }
 `;
 
