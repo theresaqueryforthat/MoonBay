@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import AppAppBar from './modules/views/AppAppBar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -15,6 +16,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import withRoot from './modules/withRoot';
 import AppFooter from './modules/views/AppFooter';
+import axios from 'axios';
 
 function Copyright() {
   return (
@@ -32,6 +34,31 @@ function Copyright() {
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function Explore() {
+    const [assets, setAssets] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {
+      // do the initial api fetching
+      (async () => {
+        let config = {
+          headers: {
+            Accept: 'application/json',
+            'X-API-KEY': process.env.REACT_APP_API_KEY
+          }
+        }
+        setIsLoading(true);
+        const {
+          data
+        } = await axios.get('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=9&include_orders=false', config);
+        setAssets(data.assets);
+        setIsLoading(false);
+      })();
+      return () => {
+        console.log('Unloading initial call...');
+      }
+    }, []);
+
+    console.log(assets);
+
   return (
     <React.Fragment>
       <AppAppBar />
@@ -68,22 +95,30 @@ function Explore() {
         <Container maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {
+              assets.length === 0 ?
+              <h1>Loading...</h1>
+              :
+            assets.map((asset, i) => (
+              <Grid item key={asset.id} xs={12} sm={6} md={4}>
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                 >
                   <CardMedia
                     component="img"
-                    image="https://source.unsplash.com/random"
+                    image={`${assets[i].image_url}`}
                     alt="random"
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Collection Name
+                      {
+                      assets[i].name ?
+                      assets[i].name :
+                      `${assets[i].collection.name} #${assets[i].token_id}`
+                      }
                     </Typography>
                     <Typography>
-                      Collection description goes here, or other info...
+                      {assets[i].collection.description}
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'space-evenly' }}>

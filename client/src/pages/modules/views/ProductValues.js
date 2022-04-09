@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache,} from '@apollo/client';
+import { useState, useEffect } from 'react';
+import PacmanLoader from 'react-spinners/PacmanLoader';
 import Box from '@mui/material/Box';
 import { onError } from '@apollo/client/link/error';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Typography from '../components/Typography';
+import axios from 'axios';
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
   if (graphqlErrors) {
@@ -32,6 +35,29 @@ const item = {
 };
 
 function ProductValues() {
+  	const [assets, setAssets] = useState([]);
+  	const [isLoading, setIsLoading] = useState(false);
+  	useEffect(() => {
+      // do the initial api fetching
+  	  (async () => {
+        let config = {
+          headers: {
+            Accept: 'application/json',
+            'X-API-KEY': process.env.REACT_APP_API_KEY
+          }
+        }
+  	    setIsLoading(true);
+  	    const {
+  	      data
+  	    } = await axios.get('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=3&include_orders=false', config);
+  	    setAssets(data);
+  	    setIsLoading(false);
+  	  })();
+  	  return () => {
+  	    console.log('Unloading initial call...');
+  	  }
+  	}, []);
+
   return (
     <ApolloProvider>
     <Box
