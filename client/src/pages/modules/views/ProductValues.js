@@ -100,8 +100,8 @@ function ProductValues() {
                 Free To Use
               </Typography>
               <Typography variant="h5">
-                {'By registering, you will access specially negotiated rates '}
-                {'that you will not find anywhere else.'}
+                {'MoonBay is a free to use site'}
+                {' that you will not find anywhere else.'}
               </Typography>
             </Box>
           </Grid>
