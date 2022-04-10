@@ -9,6 +9,11 @@ const typeDefs = gql`
     favorites: [Asset]
   }
 
+  type Auth {
+    token: ID!
+    user: User
+  }
+
   type Asset {
     _id: ID!
     name: String!
@@ -22,6 +27,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    addProfile(username: String!, email: String!, password: String!): Auth
     login(email: String): User
     createAssets: [Asset]!
   }
