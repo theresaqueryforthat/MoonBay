@@ -31,8 +31,6 @@ function Copyright() {
   );
 }
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 function Explore() {
     const [assets, setAssets] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +46,7 @@ function Explore() {
         setIsLoading(true);
         const {
           data
-        } = await axios.get('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=9&include_orders=false', config);
+        } = await axios.get('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=12&include_orders=false', config);
         setAssets(data.assets);
         setIsLoading(false);
       })();
@@ -92,21 +90,26 @@ function Explore() {
             </Stack>
           </Container>
         </Box>
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
           {/* End hero unit */}
           <Grid container spacing={4}>
             {
-              assets.length === 0 ?
+              assets.length === 0 || isLoading ?
               <h1>Loading...</h1>
               :
             assets.map((asset, i) => (
-              <Grid item key={asset.id} xs={12} sm={6} md={4}>
+              <Grid item key={asset.id} xs={12} sm={6} md={3}>
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                 >
                   <CardMedia
                     component="img"
-                    image={`${assets[i].image_url}`}
+                    image={
+                      assets[i].image_url === null ?
+                      'https://source.unsplash.com/random/?moon,space'
+                      :
+                      `${assets[i].image_url}`
+                    }
                     alt="random"
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
@@ -122,7 +125,7 @@ function Explore() {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'space-evenly' }}>
-                    <Button size="small">View</Button>
+                    <Button size="small" href={`${assets[i].permalink}`} target="_blank">View</Button>
                     <Button size="small">Purchased?</Button>
                     <Fab size="small" aria-label="like">
                       <FavoriteIcon />
