@@ -84,13 +84,8 @@ function ProductValues() {
                 Browse, Buy, Relax
               </Typography>
               <Typography variant="h5">
-                {
-                  'MoonBay is your go to site for finding the top NFT collections'
-                }
-
-                {
-                  ', browse with ease.'
-                }
+                {'MoonBay is your go to site for finding the top NFT collections'}
+                {', browse with ease.'}
               </Typography>
             </Box>
           </Grid>
@@ -106,10 +101,7 @@ function ProductValues() {
                 Take Harbor
               </Typography>
               <Typography variant="h5">
-                {
-                  'Like your favorite NFTs in an instant,'
-                }
-
+                {'Like your favorite NFTs in an instant,'}
                 {' and show off your favorites.'}
               </Typography>
             </Box>
