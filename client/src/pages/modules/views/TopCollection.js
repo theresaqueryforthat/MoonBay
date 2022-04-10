@@ -106,7 +106,7 @@ function TopCollection() {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'space-evenly' }}>
-                    <Button size="small">View</Button>
+                  <Button size="large" href={`${assets[i].permalink}`} target="_blank">View</Button>
                   </CardActions>
                 </Card>
               </Grid>
