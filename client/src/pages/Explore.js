@@ -73,6 +73,28 @@ function Explore() {
       <style>{`
         .red {color: red}
         .gray {color: gray}
+        p::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+
+        p::-webkit-scrollbar-thumb {
+          background: #C7C7C7;
+          border-radius: 10px;
+          box-shadow: none;
+          border: none;
+        }
+
+        p::-webkit-scrollbar-thumb:hover {
+          background: #7a7a7a;
+        }
+
+        p::-webkit-scrollbar-track {
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: inset 7px 10px 12px #f0f0f0;
+          border: none;
+        }
       `}</style>
       <AppAppBar />
       <main>
@@ -126,6 +148,7 @@ function Explore() {
                       `${assets[i].image_url}`
                     }
                     alt="random"
+                    sx={{ maxHeight: '264px' }}
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
@@ -135,7 +158,9 @@ function Explore() {
                       `${assets[i].collection.name} #${assets[i].token_id}`
                       }
                     </Typography>
-                    <Typography>
+                    <Typography 
+                    style={{ wordWrap: "break-word" }}
+                    sx={{ height: '90%', maxHeight: '250px', overflow: 'auto' }} >
                       {assets[i].collection.description}
                     </Typography>
                   </CardContent>

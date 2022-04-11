@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const secret = 'mysecretssshhhhhhh';
+const secret = process.env.REACT_APP_JWT_SECRET;
 const expiration = '2h';
 
 module.exports = {
