@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Fab from '@mui/material/Fab';
+import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -34,6 +34,17 @@ function Copyright() {
 function Explore() {
     const [assets, setAssets] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isActive, setIsActive] = useState(null);
+
+    // check if the clicked favorite icon is already active,
+    // if so, make it no longer active - change to gray
+    const toggleIsActive = (i) => {
+      isActive === i ?
+      setIsActive(null)
+      :
+      setIsActive(i);
+    };
+
     useEffect(() => {
       // do the initial api fetching
       (async () => {
@@ -59,6 +70,10 @@ function Explore() {
 
   return (
     <React.Fragment>
+      <style>{`
+        .red {color: red}
+        .gray {color: gray}
+      `}</style>
       <AppAppBar />
       <main>
         <Box
@@ -127,12 +142,20 @@ function Explore() {
                   <CardActions sx={{ justifyContent: 'space-evenly' }}>
                     <Button size="small" href={`${assets[i].permalink}`} target="_blank">View</Button>
                     <Button size="small">Purchased?</Button>
-                    <Fab size="small" aria-label="like">
+                    <IconButton 
+                      size="small" 
+                      aria-label="like"
+                      data-id={asset.id}
+                      className={isActive === i ? 'red' : 'gray'}
+                      // TODO: Build favorites endpoint to allow existing favorites to be loaded
+                      // {isActive === i || favorites.includes(i) ? 'red' : 'gray' }
+                      onClick={() => toggleIsActive(i)} >
                       <FavoriteIcon />
-                    </Fab>
+                    </IconButton>
                   </CardActions>
                 </Card>
               </Grid>
+              
             ))}
           </Grid>
         </Container>
