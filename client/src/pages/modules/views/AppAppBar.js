@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import Auth from '../../../utils/auth';
 import AppBar from '../components/AppBar';
 import Toolbar from '../components/Toolbar';
 
@@ -11,18 +12,27 @@ const rightLink = {
 };
 
 function AppAppBar() {
+  const logout = (event) => {
+    event.preventDefault();
+    Auth.logout();
+  };
   return (
     <div>
       <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Box sx={{ flex: 1 }} />
+          <Box sx={{ flex: 1 }}>
+            {Auth.loggedIn() ? (
+              <span>Welcome, {Auth.getUser().data.username}!</span>
+            ) : (
+              <></>
+            )}
+          </Box>
           <Link
             variant="h6"
             underline="none"
             color="inherit"
             href="/"
-            sx={{ fontSize: 24 }}
-          >
+            sx={{ fontSize: 24 }} >
             {'MoonBay'}
           </Link>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
@@ -31,27 +41,42 @@ function AppAppBar() {
               variant="h6"
               underline="none"
               href="/explore/"
-              sx={rightLink}
-            >
+              sx={rightLink} >
               {'Explore'}
             </Link>
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              href="/signin/"
-              sx={rightLink}
-            >
-              {'Sign In'}
-            </Link>
-            <Link
-              variant="h6"
-              underline="none"
-              href="/signup/"
-              sx={{ ...rightLink, color: 'secondary.main' }}
-            >
-              {'Sign Up'}
-            </Link>
+            {Auth.loggedIn() ? (
+              <>
+                <Link
+                  color="inherit"
+                  variant="h6"
+                  underline="none"
+                  href="/signin/"
+                  sx={rightLink}
+                  onClick={logout}>
+                  {'Logout'}
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  color="inherit"
+                  variant="h6"
+                  underline="none"
+                  href="/login/"
+                  sx={rightLink}
+                >
+                  {'Login'}
+                </Link>
+                <Link
+                  variant="h6"
+                  underline="none"
+                  href="/signup/"
+                  sx={{ ...rightLink, color: 'secondary.main' }}
+                >
+                  {'Sign Up'}
+                </Link>
+              </>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

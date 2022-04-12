@@ -58,61 +58,73 @@ const SignUp = () => {
   return (
     <React.Fragment>
       <AppAppBar />
-      <main className="flex-row justify-center mb-4">
-      <div className="col-12 col-lg-10">
-        <div className="card">
-          <h4 className="card-header bg-dark text-light p-2">Sign Up</h4>
-          <div className="card-body">
+      <AppForm>
+        <React.Fragment>
+          <Typography variant="h3" gutterBottom marked="center" align="center">
+            Sign Up
+          </Typography>
+        </React.Fragment>
+        {data ? (
+          <Typography>
+            Successful login. Play on!
+          </Typography>
+        ) : (
+          <Box>
             {data ? (
               <p>
                 Success! You may now head{' '}
                 <Link to="/">back to the homepage.</Link>
               </p>
             ) : (
-              <form onSubmit={handleFormSubmit}>
-                <input
-                  className="form-input"
-                  placeholder="Your username"
-                  name="username"
-                  type="text"
-                  value={formState.username}
-                  onChange={handleChange}
-                />
-                <input
-                  className="form-input"
-                  placeholder="Your email"
-                  name="email"
-                  type="email"
-                  value={formState.email}
-                  onChange={handleChange}
-                />
-                <input
-                  className="form-input"
-                  placeholder="******"
-                  name="password"
-                  type="password"
-                  value={formState.password}
-                  onChange={handleChange}
-                />
-                <button
-                  className="btn btn-block btn-info"
-                  style={{ cursor: 'pointer' }}
-                  type="submit"
-                >
-                  Submit
-                </button>
-              </form>
+              <Box marked="center" align="center">
+                <form onSubmit={handleFormSubmit}>
+                  Username:
+                  <input
+                    style={{ display: 'flex' }}
+                    className="form-input"
+                    placeholder="Your username"
+                    name="username"
+                    type="text"
+                    value={formState.username}
+                    onChange={handleChange}
+                  />
+                  Email:
+                  <input
+                    style={{ display: 'flex' }}
+                    className="form-input"
+                    placeholder="Your email"
+                    name="email"
+                    type="email"
+                    value={formState.email}
+                    onChange={handleChange}
+                  />
+                  Password:
+                  <input
+                    style={{ display: 'flex' }}
+                    className="form-input"
+                    placeholder="******"
+                    name="password"
+                    type="password"
+                    value={formState.password}
+                    onChange={handleChange}
+                  />
+                  <button
+                    className="btn btn-block btn-info"
+                    style={{ cursor: 'pointer' }}
+                    type="submit"
+                  >
+                    Submit
+                  </button>
+                </form>
+              </Box>
             )}
-
-            {error && (
-              <div className="my-3 p-3 bg-danger text-white">
-                {error.message}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </main>
+          </Box>)}
+        {error && (
+          <Typography variant="body2" align="center">
+            {error.message}
+          </Typography>
+        )}
+      </AppForm>
       <AppFooter />
     </React.Fragment>
   );

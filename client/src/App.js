@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { 
-  ApolloClient, 
-  ApolloProvider, 
+import {
+  ApolloClient,
+  ApolloProvider,
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
@@ -12,6 +12,7 @@ import Explore from './pages/Explore';
 import Favorites from './pages/Favorites';
 import NotFound from './pages/NotFound';
 import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -40,23 +41,27 @@ const App = () => {
       <Router>
         <div className="flex-column justify-center align-center min-100-vh bg-primary">
           <Routes>
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={<Home />}
             />
-                        <Route 
-              path="/signup" 
+            <Route
+              path="/login"
+              element={<Login />}
+            />
+            <Route
+              path="/signup"
               element={<SignUp />}
             />
-            <Route 
-              path="/explore" 
+            <Route
+              path="/explore"
               element={<Explore />}
             />
-            <Route 
-              path="/favorites" 
+            <Route
+              path="/favorites"
               element={<Favorites />}
             />
-            <Route 
+            <Route
               path="*"
               element={<NotFound />}
             />
