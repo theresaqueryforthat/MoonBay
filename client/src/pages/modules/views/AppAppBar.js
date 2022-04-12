@@ -20,12 +20,18 @@ function AppAppBar() {
     <div>
       <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: 1 }} >
+          <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              sx={rightLink} >
             {Auth.loggedIn() ? (
               <span>Welcome, {Auth.getUser().data.username}!</span>
             ) : (
               <></>
             )}
+            </Link>
           </Box>
           <Link
             variant="h6"
