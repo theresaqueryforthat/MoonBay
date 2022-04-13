@@ -41,7 +41,7 @@ const typeDefs = gql`
       assetUser: String!,
       openSeaId: String!,
     ): Asset
-    removeFavorite(assetId: ID!): Asset
+    removeFavorite(assetUser: String!, openSeaId: String!): Asset
   }
 `;
 

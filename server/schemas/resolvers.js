@@ -51,8 +51,8 @@ const resolvers = {
 
       return asset;
     },
-    removeFavorite: async (parent, { assetId }) => {
-      return Asset.findOneAndDelete({ _id: thoughtId });
+    removeFavorite: async (parent, { assetUser, openSeaId }) => {
+      return Asset.findOneAndDelete({ assetUser: assetUser, openSeaId: openSeaId});
     }
   },
 };

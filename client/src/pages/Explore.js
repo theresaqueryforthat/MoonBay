@@ -19,7 +19,7 @@ import Link from '@mui/material/Link';
 import withRoot from './modules/withRoot';
 import AppFooter from './modules/views/AppFooter';
 import axios from 'axios';
-import { ADD_FAVORITE } from '../utils/mutations';
+import { ADD_FAVORITE, REMOVE_FAVORITE } from '../utils/mutations';
 import { QUERY_FAVORITES } from '../utils/queries';
 import Auth from '../utils/auth';
 
@@ -40,19 +40,32 @@ function Explore() {
   const [assets, setAssets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isActive, setIsActive] = useState(null);
-  const { loading, data } = useQuery(QUERY_FAVORITES);
+  const { loading, data, refetch } = useQuery(QUERY_FAVORITES);
   const oldFavorites = data?.assets || [];
 
-  console.log('old favorites:', oldFavorites);
-
-  const [addFavorite, { error }] = useMutation(ADD_FAVORITE, {
+  const [addFavorite, { addError }] = useMutation(ADD_FAVORITE, {
     update(cache, { data: { addFavorite } }) {
       try {
-        const { favorites } = cache.readQuery({ query: QUERY_FAVORITES });
+        const { assets } = cache.readQuery({ query: QUERY_FAVORITES });
 
         cache.writeQuery({
           query: QUERY_FAVORITES,
-          data: { favorites: [addFavorite, ...favorites] },
+          data: { assets: [addFavorite, ...assets] },
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  });
+
+  const [removeFavorite, { removeError }] = useMutation(REMOVE_FAVORITE, {
+    update(cache, { data: { removeFavorite } }) {
+      try {
+        const { assets } = cache.readQuery({ query: QUERY_FAVORITES });
+
+        cache.writeQuery({
+          query: QUERY_FAVORITES,
+          data: { assets: [...assets] },
         });
       } catch (e) {
         console.error(e);
@@ -67,20 +80,25 @@ function Explore() {
     const assetPermalink = event.target.dataset.permalink;
     const assetImage_url = event.target.dataset.image_url;
     const assetOpenSeaId = event.target.dataset.id;
+    const assetClassName = event.target.className;
 
-    console.log(event.target);
-    console.log('assetName:', assetName);
-    console.log('assetPermalink:', assetPermalink);
-    console.log('assetImage_url:', assetImage_url);
-    console.log('assetOpenSeaId:', assetOpenSeaId);
-
-    if (isActive === i) {
+    if (assetClassName.includes(' red ')) {
       //remove favorite
-      setIsActive(null);
-      console.log('remove favorite');
+      try {
+        const { dataRemoved } = await removeFavorite({
+          variables: {
+            assetUser: Auth.getUser().data.username,
+            openSeaId: assetOpenSeaId
+          },
+        });
+        setIsActive(null);
+        await refetch();
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       try {
-        const { data } = await addFavorite({
+        const { dataAdded } = await addFavorite({
           variables: {
             name: assetName,
             permalink: assetPermalink,
@@ -89,16 +107,11 @@ function Explore() {
             openSeaId: assetOpenSeaId,
           },
         });
-        console.log(data);
         setIsActive(i);
+        await refetch();
       } catch (err) {
         console.error(err);
       }
-
-      // isActive === i ?
-      //   setIsActive(null)
-      //   :
-      //   setIsActive(i);
     }
   };
 
@@ -120,8 +133,6 @@ function Explore() {
       console.log('Unloading initial call...');
     }
   }, []);
-
-  console.log(assets);
 
   return (
     <React.Fragment>
@@ -179,9 +190,9 @@ function Explore() {
               spacing={2}
               justifyContent="center"
             >
-            </Stack>{error && (
+            </Stack>{(addError || removeError) && (
               <div className="col-12 my-3 bg-danger text-white p-3">
-                {error.message}
+                {addError ? addError.message : removeError.message}
               </div>
             )}
           </Container>
@@ -224,7 +235,7 @@ function Explore() {
                         </Typography>
                       </CardContent>
                       <CardActions sx={{ justifyContent: 'space-evenly' }}>
-                        <IconButton sizeSmall href={`${assets[i].permalink}`} target="_blank" alt="OpenSea"><img src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.svg" alt="OpenSea" width="35px" /></IconButton>
+                        <IconButton href={`${assets[i].permalink}`} target="_blank" alt="OpenSea"><img src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.svg" alt="OpenSea" width="35px" /></IconButton>
                         <Button size="small" className={'gray'}><ShoppingCartIcon /></Button>
                         <IconButton
                           size="small"
@@ -241,7 +252,7 @@ function Explore() {
                           }
                           data-permalink={`${assets[i].permalink}`}
                           data-id={asset.id}
-                          className={(isActive === i) || (oldFavorites.some(e => e.openSeaId == asset.id)) ? 'red' : 'gray' }
+                          className={(isActive === i) || (oldFavorites.some(e => e.openSeaId == asset.id)) ? 'red' : 'gray'}
                           onClick={(event) => toggleIsActive(i, event)} >
                           <FavoriteIcon pointerEvents="none" />
                         </IconButton>

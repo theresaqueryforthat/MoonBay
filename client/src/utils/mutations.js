@@ -47,3 +47,13 @@ export const ADD_FAVORITE = gql`
     }
   }
 `;
+
+export const REMOVE_FAVORITE = gql`
+  mutation removeFavorite($assetUser: String!, $openSeaId: String!) {
+    removeFavorite(assetUser: $assetUser, openSeaId: $openSeaId) {
+        _id
+        assetUser
+        openSeaId
+    }
+  }
+`;
