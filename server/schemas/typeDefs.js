@@ -15,22 +15,33 @@ const typeDefs = gql`
   }
 
   type Asset {
-    _id: ID!
-    name: String!
-    permalink: String!
-    image_url: String!
+    _id: ID
+    name: String
+    permalink: String
+    image_url: String
+    assetUser: String
+    createdAt: String
+    openSeaId: String
   }
 
   type Query {
-    users: [User]!
+    users: [User]
     user(username: String!): User
-    assets: [Asset]!
+    assets(username: String): [Asset]
+    asset(assetId: ID!): Asset
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
-    createAssets: [Asset]!
+    addFavorite(
+      name: String!,
+      permalink: String!,
+      image_url: String!,
+      assetUser: String!,
+      openSeaId: String!,
+    ): Asset
+    removeFavorite(assetId: ID!): Asset
   }
 `;
 
