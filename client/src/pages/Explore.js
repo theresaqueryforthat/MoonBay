@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -165,8 +166,8 @@ function Explore() {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'space-evenly' }}>
-                    <Button size="small" href={`${assets[i].permalink}`} target="_blank">View</Button>
-                    <Button size="small">Purchased?</Button>
+                    <IconButton sizeSmall href={`${assets[i].permalink}`} target="_blank" alt="OpenSea"><img src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.svg" alt="OpenSea" width="35px" /></IconButton>
+                    <Button size="small" className={'gray'}><ShoppingCartIcon /></Button>
                     <IconButton 
                       size="small" 
                       aria-label="like"
