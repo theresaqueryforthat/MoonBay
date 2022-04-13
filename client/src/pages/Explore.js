@@ -165,7 +165,7 @@ function Explore() {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'space-evenly' }}>
-                    <Button size="small" href={`${assets[i].permalink}`} target="_blank">View</Button>
+                    <IconButton sizeSmall href={`${assets[i].permalink}`} target="_blank"><img src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-Blue.svg" alt="OpenSea" width="40px" /></IconButton>
                     <Button size="small">Purchased?</Button>
                     <IconButton 
                       size="small" 
