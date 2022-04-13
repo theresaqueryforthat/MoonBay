@@ -10,9 +10,12 @@ const resolvers = {
     user: async (parent, { userId }) => {
       return User.findOne({ _id: userId });
     },
-    assets: async (parent, { _id }) => {
-      const params = _id ? { _id } : {};
-      return Asset.find(params);
+    assets: async (parent, { username }) => {
+      const params = username ? { username } : {};
+      return Asset.find(params).sort({ createdAt: -1 });
+    },
+    asset: async (parent, { assetId }) => {
+      return Asset.findOne({ _id: assetId });
     },
   },
   Mutation: {
@@ -38,10 +41,19 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    createAssets: async (parent, args) => {
-      const asset = await Asset.create(args);
+    addFavorite: async (parent, name, permalink, image_url, assetUser, openSeaId) => {
+      const asset = await Asset.create(name, permalink, image_url, assetUser, openSeaId);
+
+      await User.findOneAndUpdate(
+        { username: assetUser },
+        { $addToSet: { favorites: asset._id } }
+      );
+
       return asset;
     },
+    removeFavorite: async (parent, { assetId }) => {
+      return Asset.findOneAndDelete({ _id: thoughtId });
+    }
   },
 };
 

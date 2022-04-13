@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
 import AppAppBar from './modules/views/AppAppBar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -17,6 +18,9 @@ import Link from '@mui/material/Link';
 import withRoot from './modules/withRoot';
 import AppFooter from './modules/views/AppFooter';
 import axios from 'axios';
+import { ADD_FAVORITE } from '../utils/mutations';
+import { QUERY_FAVORITES } from '../utils/queries';
+import Auth from '../utils/auth';
 
 function Copyright() {
   return (
@@ -32,41 +36,91 @@ function Copyright() {
 }
 
 function Explore() {
-    const [assets, setAssets] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isActive, setIsActive] = useState(null);
+  const [assets, setAssets] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isActive, setIsActive] = useState(null);
+  const { loading, data } = useQuery(QUERY_FAVORITES);
+  const oldFavorites = data?.assets || [];
 
-    // check if the clicked favorite icon is already active,
-    // if so, make it no longer active - change to gray
-    const toggleIsActive = (i) => {
-      isActive === i ?
-      setIsActive(null)
-      :
-      setIsActive(i);
-    };
+  console.log('old favorites:', oldFavorites);
 
-    useEffect(() => {
-      // do the initial api fetching
-      (async () => {
-        let config = {
-          headers: {
-            Accept: 'application/json',
-            'X-API-KEY': process.env.REACT_APP_API_KEY
-          }
-        }
-        setIsLoading(true);
-        const {
-          data
-        } = await axios.get('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=12&include_orders=false', config);
-        setAssets(data.assets);
-        setIsLoading(false);
-      })();
-      return () => {
-        console.log('Unloading initial call...');
+  const [addFavorite, { error }] = useMutation(ADD_FAVORITE, {
+    update(cache, { data: { addFavorite } }) {
+      try {
+        const { favorites } = cache.readQuery({ query: QUERY_FAVORITES });
+
+        cache.writeQuery({
+          query: QUERY_FAVORITES,
+          data: { favorites: [addFavorite, ...favorites] },
+        });
+      } catch (e) {
+        console.error(e);
       }
-    }, []);
+    },
+  });
 
-    console.log(assets);
+  // check if the clicked favorite icon is already active,
+  // if so, make it inactive (gray)
+  const toggleIsActive = async (i, event) => {
+    const assetName = event.target.dataset.name;
+    const assetPermalink = event.target.dataset.permalink;
+    const assetImage_url = event.target.dataset.image_url;
+    const assetOpenSeaId = event.target.dataset.id;
+
+    console.log(event.target);
+    console.log('assetName:', assetName);
+    console.log('assetPermalink:', assetPermalink);
+    console.log('assetImage_url:', assetImage_url);
+    console.log('assetOpenSeaId:', assetOpenSeaId);
+
+    if (isActive === i) {
+      //remove favorite
+      setIsActive(null);
+      console.log('remove favorite');
+    } else {
+      try {
+        const { data } = await addFavorite({
+          variables: {
+            name: assetName,
+            permalink: assetPermalink,
+            image_url: assetImage_url,
+            assetUser: Auth.getUser().data.username,
+            openSeaId: assetOpenSeaId,
+          },
+        });
+        console.log(data);
+        setIsActive(i);
+      } catch (err) {
+        console.error(err);
+      }
+
+      // isActive === i ?
+      //   setIsActive(null)
+      //   :
+      //   setIsActive(i);
+    }
+  };
+
+  useEffect(() => {
+    // do the initial api fetching
+    (async () => {
+      let config = {
+        headers: {
+          Accept: 'application/json',
+          'X-API-KEY': process.env.REACT_APP_API_KEY
+        }
+      }
+      setIsLoading(true);
+      const { data } = await axios.get('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=12&include_orders=false', config);
+      setAssets(data.assets);
+      setIsLoading(false);
+    })();
+    return () => {
+      console.log('Unloading initial call...');
+    }
+  }, []);
+
+  console.log(assets);
 
   return (
     <React.Fragment>
@@ -124,64 +178,77 @@ function Explore() {
               spacing={2}
               justifyContent="center"
             >
-            </Stack>
+            </Stack>{error && (
+              <div className="col-12 my-3 bg-danger text-white p-3">
+                {error.message}
+              </div>
+            )}
           </Container>
         </Box>
         <Container maxWidth="lg">
           {/* End hero unit */}
           <Grid container spacing={4}>
             {
-              assets.length === 0 || isLoading ?
-              <h1>Loading...</h1>
-              :
-            assets.map((asset, i) => (
-              <Grid item key={asset.id} xs={12} sm={6} md={3}>
-                <Card
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-                >
-                  <CardMedia
-                    component="img"
-                    image={
-                      assets[i].image_url === null ?
-                      'https://source.unsplash.com/random/?moon,space'
-                      :
-                      `${assets[i].image_url}`
-                    }
-                    alt="random"
-                    sx={{ maxHeight: '264px' }}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {
-                      assets[i].name ?
-                      assets[i].name :
-                      `${assets[i].collection.name} #${assets[i].token_id}`
-                      }
-                    </Typography>
-                    <Typography 
-                    style={{ wordWrap: "break-word" }}
-                    sx={{ height: '90%', maxHeight: '250px', overflow: 'auto' }} >
-                      {assets[i].collection.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ justifyContent: 'space-evenly' }}>
-                    <Button size="small" href={`${assets[i].permalink}`} target="_blank">View</Button>
-                    <Button size="small">Purchased?</Button>
-                    <IconButton 
-                      size="small" 
-                      aria-label="like"
-                      data-id={asset.id}
-                      className={isActive === i ? 'red' : 'gray'}
-                      // TODO: Build favorites endpoint to allow existing favorites to be loaded
-                      // {isActive === i || favorites.includes(i) ? 'red' : 'gray' }
-                      onClick={() => toggleIsActive(i)} >
-                      <FavoriteIcon />
-                    </IconButton>
-                  </CardActions>
-                </Card>
-              </Grid>
-              
-            ))}
+              assets.length === 0 || isLoading || loading ?
+                <h1>Loading...</h1>
+                :
+                assets.map((asset, i) => (
+                  <Grid item key={asset.id} xs={12} sm={6} md={3}>
+                    <Card
+                      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={
+                          assets[i].image_url === null ?
+                            'https://source.unsplash.com/random/?moon,space'
+                            :
+                            `${assets[i].image_url}`
+                        }
+                        alt="random"
+                        sx={{ maxHeight: '264px' }}
+                      />
+                      <CardContent sx={{ flexGrow: 1 }}>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          {
+                            assets[i].name ?
+                              assets[i].name :
+                              `${assets[i].collection.name} #${assets[i].token_id}`
+                          }
+                        </Typography>
+                        <Typography
+                          style={{ wordWrap: "break-word" }}
+                          sx={{ height: '90%', maxHeight: '250px', overflow: 'auto' }} >
+                          {assets[i].collection.description}
+                        </Typography>
+                      </CardContent>
+                      <CardActions sx={{ justifyContent: 'space-evenly' }}>
+                        <Button size="small" href={`${assets[i].permalink}`} target="_blank">View</Button>
+                        <Button size="small">Purchased?</Button>
+                        <IconButton
+                          size="small"
+                          aria-label="like"
+                          data-name={
+                            assets[i].name ? assets[i].name :
+                              `${assets[i].collection.name} #${assets[i].token_id}`
+                          }
+                          data-image_url={
+                            assets[i].image_url === null ?
+                              'https://source.unsplash.com/random/?moon,space'
+                              :
+                              `${assets[i].image_url}`
+                          }
+                          data-permalink={`${assets[i].permalink}`}
+                          data-id={asset.id}
+                          className={(isActive === i) || (oldFavorites.some(e => e.openSeaId == asset.id)) ? 'red' : 'gray' }
+                          onClick={(event) => toggleIsActive(i, event)} >
+                          <FavoriteIcon pointerEvents="none" />
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+
+                ))}
           </Grid>
         </Container>
       </main>
