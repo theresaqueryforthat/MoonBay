@@ -11,6 +11,12 @@ const rightLink = {
   ml: 3,
 };
 
+const leftLink = {
+  fontSize: 16,
+  color: 'common.white',
+  mr: 3,
+};
+
 function AppAppBar() {
   const logout = (event) => {
     event.preventDefault();
@@ -20,18 +26,30 @@ function AppAppBar() {
     <div>
       <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Box sx={{ flex: 1 }} >
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }} >
           <Link
               color="inherit"
               variant="h6"
               underline="none"
-              sx={rightLink} >
+              sx={leftLink} >
             {Auth.loggedIn() ? (
               <span>Welcome, {Auth.getUser().data.username}!</span>
             ) : (
               <></>
             )}
             </Link>
+            {Auth.loggedIn() ? (
+              <Link
+              color="inherit"
+              variant="h6"
+              underline="none"
+              href="/favorites/"
+              sx={leftLink} >
+              {'My Favorites'}
+            </Link>
+            ) : (
+              <></>
+            )}
           </Box>
           <Link
             variant="h6"
@@ -39,7 +57,7 @@ function AppAppBar() {
             color="inherit"
             href="/"
             sx={{ fontSize: 24 }} >
-            {'MoonBay'}
+            {'MoonBay '}
           </Link>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
             <Link

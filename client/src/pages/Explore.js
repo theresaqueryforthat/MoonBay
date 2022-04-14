@@ -15,26 +15,13 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import withRoot from './modules/withRoot';
 import AppFooter from './modules/views/AppFooter';
 import axios from 'axios';
 import { ADD_FAVORITE, REMOVE_FAVORITE } from '../utils/mutations';
 import { QUERY_FAVORITES } from '../utils/queries';
 import Auth from '../utils/auth';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Copyright from './modules/components/Copyright';
 
 function Explore() {
   const [assets, setAssets] = useState([]);
@@ -98,6 +85,7 @@ function Explore() {
       }
     } else {
       try {
+        //eslint-disable-next-line
         const { dataAdded } = await addFavorite({
           variables: {
             name: assetName,
@@ -201,9 +189,19 @@ function Explore() {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {
-              assets.length === 0 || isLoading || loading ?
-                <h1>Loading...</h1>
-                :
+              assets.length === 0 || isLoading || loading ? (
+                <Container maxWidth="sm">
+                  <Stack
+                    sx={{ pt: 4 }}
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center" >
+                    <Typography variant="h5" align="center" color="text.secondary" paragraph>
+                      Loading...
+                    </Typography>
+                  </Stack>
+                </Container>
+              ) :
                 assets.map((asset, i) => (
                   <Grid item key={asset.id} xs={12} sm={6} md={3}>
                     <Card
@@ -252,6 +250,7 @@ function Explore() {
                           }
                           data-permalink={`${assets[i].permalink}`}
                           data-id={asset.id}
+                          //eslint-disable-next-line
                           className={(isActive === i) || (oldFavorites.some(e => e.openSeaId == asset.id)) ? 'red' : 'gray'}
                           onClick={(event) => toggleIsActive(i, event)} >
                           <FavoriteIcon pointerEvents="none" />
