@@ -6,18 +6,6 @@ import Container from '@mui/material/Container';
 import Typography from '../components/Typography';
 import TextField from '../components/TextField';
 
-function Copyright() {
-  return (
-    <React.Fragment>
-      {'© '}
-      <Link color="inherit" href="https://github.com/">
-        MoonBay
-      </Link>{' '}
-      {new Date().getFullYear()}
-    </React.Fragment>
-  );
-}
-
 const iconStyle = {
   width: 48,
   height: 48,
@@ -48,13 +36,12 @@ export default function AppFooter() {
               sx={{ height: 120 }}
             >
               <Grid item sx={{ display: 'flex' }}>
-                <Box href="https://linktr.ee/rickyricer?utm_source=linktree_profile_share&ltsid=6618688c-1d28-411f-8068-8a3835741233" >
+                <Link href="https://linktr.ee/rickyricer?utm_source=linktree_profile_share&ltsid=6618688c-1d28-411f-8068-8a3835741233" >
                   <img
                     src="/static/GitHub-Mark-32px.png"
                     alt="GitHub"
                   />
-                  <Copyright />
-                </Box>
+                </Link>
               </Grid>
             </Grid>
           </Grid>
