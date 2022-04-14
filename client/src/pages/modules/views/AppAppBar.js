@@ -57,7 +57,7 @@ function AppAppBar() {
             color="inherit"
             href="/"
             sx={{ fontSize: 24 }} >
-            {'MoonBay'}
+            {'MoonBay '}
           </Link>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
             <Link

@@ -85,6 +85,7 @@ function Explore() {
       }
     } else {
       try {
+        //eslint-disable-next-line
         const { dataAdded } = await addFavorite({
           variables: {
             name: assetName,
@@ -188,9 +189,19 @@ function Explore() {
           {/* End hero unit */}
           <Grid container spacing={4}>
             {
-              assets.length === 0 || isLoading || loading ?
-                <h1>Loading...</h1>
-                :
+              assets.length === 0 || isLoading || loading ? (
+                <Container maxWidth="sm">
+                  <Stack
+                    sx={{ pt: 4 }}
+                    direction="row"
+                    spacing={2}
+                    justifyContent="center" >
+                    <Typography variant="h5" align="center" color="text.secondary" paragraph>
+                      Loading...
+                    </Typography>
+                  </Stack>
+                </Container>
+              ) :
                 assets.map((asset, i) => (
                   <Grid item key={asset.id} xs={12} sm={6} md={3}>
                     <Card
@@ -239,6 +250,7 @@ function Explore() {
                           }
                           data-permalink={`${assets[i].permalink}`}
                           data-id={asset.id}
+                          //eslint-disable-next-line
                           className={(isActive === i) || (oldFavorites.some(e => e.openSeaId == asset.id)) ? 'red' : 'gray'}
                           onClick={(event) => toggleIsActive(i, event)} >
                           <FavoriteIcon pointerEvents="none" />

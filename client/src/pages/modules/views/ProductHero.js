@@ -21,6 +21,9 @@ export default function ProductHero() {
         src={backgroundImage}
         alt="increase priority"
       />
+      <Typography>
+        🌙
+      </Typography>
       <Typography color="inherit" align="center" variant="h2" marked="center">
         Today's Hottest Collections
       </Typography>
