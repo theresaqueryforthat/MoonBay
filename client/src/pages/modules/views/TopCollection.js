@@ -98,6 +98,7 @@ function TopCollection() {
                             `${assets[i].image_url}`
                         }
                         alt="random"
+                        sx={{ maxHeight: '264px' }}
                       />
                       <CardContent sx={{ flexGrow: 1 }}>
                         <Typography gutterBottom variant="h5" component="h2">
